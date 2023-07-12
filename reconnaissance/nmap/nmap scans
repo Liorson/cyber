@@ -1,10 +1,57 @@
 targets behind stateless firewall scan:
-Null Scan
-FIN Scan
-Xmas Scan
+Null Scan -sN
+FIN Scan  -sF
+Xmas Scan -sX
 explanation- One scenario where these three scan types can be efficient is when 
 scanning a target behind a stateless (non-stateful) firewall. A stateless firewall 
 will check if the incoming packet has the SYN flag set to detect a connection attempt. 
 Using a flag combination that does not match the SYN packet makes it possible to deceive the
 firewall and reach the system behind it. However, a stateful firewall will practically block all 
 such crafted packets and render this kind of scan useless.
+
+understanding firewall rules with nmap scans:
+TCP ACK scan  -sA
+TCP ACK scan  -sW
+This kind of scans would be helpful if there is a firewall in front of the target. Consequently,
+based on which ACK packets resulted in responses, you will learn which ports were not blocked by the firewall. 
+In other words, this type of scan is more suitable to discover firewall rule sets and configurations.
+
+Custom Scan:
+--scanflags e.x --scanflags RSTSYNFIN
+If you want to experiment with a new TCP flag combination beyond the built-in TCP scan types, 
+you can do so using --scanflags. For instance, if you want to set SYN, RST, and FIN simultaneously,
+you can do so using --scanflags RSTSYNFIN. As shown in the figure below, if you develop your custom scan, 
+you need to know how the different ports will behave to correctly interpret the results in different scenarios. 
+
+Spoofing and Decoys:
+spoofed IP and MAC -S
+nmap -S SPOOFED_IP 10.10.16.179. Consequently, Nmap will craft all the packets using the provided source IP address SPOOFED_IP.
+The target machine will respond to the incoming packets sending the replies to the destination IP address SPOOFED_IP.
+For this scan to work and give accurate results, the attacker needs to monitor the network traffic to analyze the replies. 
+In brief, scanning with a spoofed IP address is three steps:
+1. Attacker sends a packet with a spoofed source IP address to the target machine.
+2. Target machine replies to the spoofed IP address as the destination.
+3. Attacker captures the replies to figure out open ports.
+
+decoy scan -D
+make the scan appear to be coming from many IP addresses so that the attacker’s IP address would be lost among them
+the scan of the target machine will appear to be coming from 3 different sources, and consequently, the replies will go the decoys as well.
+For example= nmap -D 10.10.0.1,10.10.0.2,ME 10.10.16.179   /    nmap -D 10.10.0.1,10.10.0.2,RND,RND,ME 10.10.16.179
+
+Fragmented Packets:
+fragment packets scan  -f
+Once chosen, the IP data will be divided into 8 bytes or less. Adding another -f (-f -f or -ff) will split the data into 16 byte-fragments instead of 8.
+You can change the default value by using the --mtu; however, you should always choose a multiple of 8.
+On the other hand, if you prefer to increase the size of your packets to make them look innocuous, you can use the option --data-length NUM, 
+where num specifies the number of bytes you want to append to your packets.
+
+Idle/Zombie Scan:
+nmap -sI ZOMBIE_IP Target_IP
+requires an idle system connected to the network that you can communicate with.
+Practically, Nmap will make each probe appear as if coming from the idle (zombie) host,
+then it will check for indicators whether the idle (zombie) host received any response to the spoofed probe. 
+This is accomplished by checking the IP identification (IP ID) value in the IP header. 
+The idle (zombie) scan requires the following three steps to discover whether a port is open:
+    1. Trigger the idle host to respond so that you can record the current IP ID on the idle host.
+    2. Send a SYN packet to a TCP port on the target. The packet should be spoofed to appear as if it was coming from the idle host (zombie) IP address.
+    3. Trigger the idle machine again to respond so that you can compare the new IP ID with the one received earlier.
