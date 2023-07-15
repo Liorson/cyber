@@ -1,0 +1,14 @@
+Scoring Vulnerabilities:
+1) CVSS  - open source framework for vulnerability scoring by the following factors:
+  *) How easy is it to exploit the vulnerability?
+  *) Do exploits exist for this?
+  *) How does this vulnerability interfere with the CIA triad?
+2) vpr   - modern framework in vulnerability management
+  *) vulnerabilities are given a score with a heavy focus on the risk a vulnerability poses to the organisation itself
+
+Vulnerability Databases:
+1. NVD (National Vulnerability Database)
+2. Exploit-DB
+3. Rapid7
+4. GitHub
+5. Searchsploit
