@@ -1,4 +1,0 @@
-Scheduled Tasks:
-schtasks - listing the Scheduled tasks
-schtasks /query /tn vulntask /fo list /v - retrieving detailed information about any of the services in the Scheduled tasks
-icacls c:\tasks\schtask.bat -  file permissions on the executable in the Scheduled tasks
