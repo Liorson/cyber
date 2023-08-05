@@ -1,0 +1,22 @@
+Obtain Information:
+enum4linux -a [-u "<username>" -p "<passwd>"] <IP>
+enum4linux-ng -A [-u "<username>" -p "<passwd>"] <IP>
+nmap --script "safe or smb-enum-*" -p 445 <IP>
+
+Enumerate Users, Groups & Logged On Users:
+crackmapexec smb 10.10.10.10 --users [-u <username> -p <password>]
+crackmapexec smb 10.10.10.10 --groups [-u <username> -p <password>]
+crackmapexec smb 10.10.10.10 --groups --loggedon-users [-u <username> -p <password>]
+
+
+List shared folders:
+smbclient -L <IP>
+smbclient --no-pass -L //<IP> # Null user
+smbclient -U 'username[%passwd]' -L [--pw-nt-hash] //<IP> #If you omit the pwd, it will be prompted. With --pw-nt-hash, the pwd provided is the NT hash
+smbmap -H <IP> [-P <PORT>] #Null user
+smbmap -u "username" -p "password" -H <IP> [-P <PORT>] #Creds
+smbmap -u "username" -p "<NT>:<LM>" -H <IP> [-P <PORT>] #Pass-the-Hash
+smbmap -R -u "username" -p "password" -H <IP> [-P <PORT>] #Recursive list
+crackmapexec smb <IP> -u '' -p '' --shares #Null user
+crackmapexec smb <IP> -u 'username' -p 'password' --shares #Guest user
+crackmapexec smb <IP> -u 'username' -H '<HASH>' --shares #Guest user
