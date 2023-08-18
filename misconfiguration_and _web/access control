@@ -1,0 +1,6 @@
+robots.txt  -  reaching disallowed pages
+cookies and user roles  -  mostly hidden
+Original-URL and X-Rewrite-URL  - used to override the URL in the original request, tells the front-end from which page we arrived
+GET/POST  -  changing the request method
+multi-step processes  -  Sometimes, a web site will implement rigorous access controls over some of these steps, but ignore others. 
+Referer-based  -  for sub-pages such as /admin/deleteUser only inspects the Referer header. 
