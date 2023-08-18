@@ -1,0 +1,6 @@
+Error messages  -  by getting 500 some servers will add some info with the error that can help us like ubuntu version
+Debugging data  -  some websites do not close Debugging pages which reveals some good info
+TRACE -  trace is used for debugging and developers use it in the development stage but if not removed we can use it as well,
+its for echo our request that we send to the server to see how its treats our request, 
+and sometimes proxy servers can add info that we want during our request to send
+
