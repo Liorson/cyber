@@ -1,4 +1,11 @@
 Username enumeration:
 1) Status codes
+   If a guess returns a different status code, this is a strong indication that the username was correct.
 2) Error messages
+  Sometimes the returned error message is different depending on whether both the username AND password are 
+  incorrect or only the password was incorrect. 
 3) Response times
+   Some websites might only check whether the password is correct if the username is valid. 
+   This extra step might cause a slight increase in the response time. This may be subtle, 
+   but an attacker can make this delay more obvious by entering an excessively long password that the
+   website takes noticeably longer to handle.
