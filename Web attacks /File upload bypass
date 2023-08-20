@@ -14,7 +14,7 @@ Content-Disposition: form-data; name="image"; filename="../test.php"
 One of the more obvious ways of preventing users from uploading malicious scripts is to blacklist potentially 
 dangerous file extensions like .php. The practice of blacklisting is inherently flawed as it's difficult to explicitly
 block every possible file extension that could be used to execute code. Such blacklists can sometimes be bypassed by 
-using lesser known, alternative file extensions that may still be executable, such as .php5, .shtml, and so on.
+using lesser-known, alternative file extensions that may still be executable, such as .php5, .shtml, and so on.
 Overriding the server configuration:
 before an Apache server will execute PHP files requested by a client, developers might have to add the following
 directives to their /etc/apache2/apache2.conf file:
@@ -22,3 +22,12 @@ LoadModule php_module /usr/lib/apache2/modules/libphp.so
 AddType application/x-httpd-php .php
 Apache servers, for example, will load a directory-specific configuration from a file called .htaccess if one is present.
 IIS servers using a web.config file. 
+
+4) Web shell upload via obfuscated file extension (when dealing with whitelist) -
+ a)provide an extension of case mix like "test.pHp
+ b)provide multiple extensions like "exploit.php.jpg"
+ c)provide an extension with URL encoding (or double URL encoding) for dots, forward slashes , backward slashes "exploit%2Ephp"
+ d)provide semicolons or URL-encoded null byte characters before the file extension like "exploit.asp;.jpg" "exploit.asp%00.jpg"
+ e)Try using multibyte unicode characters, which may be converted to null bytes and dots after unicode conversion or 
+   normalization. Sequences like xC0 x2E, xC4 xAE or xC0 xAE may be translated to x2E
+ f)provide double the extension like "exploit.p.phphp" for defenses that involve stripping or replacing dangerous extensions 
