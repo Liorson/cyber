@@ -1,0 +1,24 @@
+1) validation of file uploads -
+when expecting only images the content type will be as follows "Content-Type: image/jpeg".
+when we upload a php file, the content type will be "Content-Type: application/x-httpd-php" so all we need to change between
+the unexpected php and the expected jpeg.
+
+2) Web shell upload via path traversal -
+there is an option to disable some directories from executing files like Images directory.
+so we can upload our file with file traversal to another directory which is less secure and run it from there
+*Web servers often use the filename field in multipart/form-data requests to determine the name and location 
+where the file should be saved.*:
+Content-Disposition: form-data; name="image"; filename="../test.php"
+
+3) Web shell upload via extension blacklist bypass -
+One of the more obvious ways of preventing users from uploading malicious scripts is to blacklist potentially 
+dangerous file extensions like .php. The practice of blacklisting is inherently flawed as it's difficult to explicitly
+block every possible file extension that could be used to execute code. Such blacklists can sometimes be bypassed by 
+using lesser known, alternative file extensions that may still be executable, such as .php5, .shtml, and so on.
+Overriding the server configuration:
+before an Apache server will execute PHP files requested by a client, developers might have to add the following
+directives to their /etc/apache2/apache2.conf file:
+LoadModule php_module /usr/lib/apache2/modules/libphp.so
+AddType application/x-httpd-php .php
+Apache servers, for example, will load a directory-specific configuration from a file called .htaccess if one is present.
+IIS servers using a web.config file. 
