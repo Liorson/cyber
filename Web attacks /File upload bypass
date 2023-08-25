@@ -1,4 +1,5 @@
 1) validation of file uploads -
+"Content-Type: image/jpeg"
 when expecting only images the content type will be as follows "Content-Type: image/jpeg".
 when we upload a php file, the content type will be "Content-Type: application/x-httpd-php" so all we need to change between
 the unexpected php and the expected jpeg.
