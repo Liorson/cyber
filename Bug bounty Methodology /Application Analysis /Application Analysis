@@ -1,0 +1,25 @@
+The big 6 questions:
+how does the app pass data?
+how/when dows the app talk about users? in cookies/api/uri and in username/parameter/email/uuid/
+does the site have multi-tenancy or user level?
+does the site have a unique threat model?
+has there been past security research & vulns?
+how does the app handle?
+
+spidering:
+hakrawlaer/gospider for cmd line
+burpsuite/zap for GUI
+
+javascript parsing:
+linkfinder
+xnl-h4ck3r
+burp(gap extention)
+
+parameter analysis: 
+https://github.com/bugcrowd/HUNT/blob/master/burp/conf/issues.json
+https://github.com/mrofisr/gf-pattens
+jhaddix/sus_params
+
+
+
+
