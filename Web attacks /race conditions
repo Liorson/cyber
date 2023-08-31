@@ -10,11 +10,12 @@ requests and theu also be applied.
 One way to do that is to send multiple requests in the same time the problem is we are not fast enough.
 
 In burpsuite we have few solutions for that:
-Burpsuite reapter - send group in sequence (single connection): sends multiple requests one after the other over one connection
-Burpsuite reapter - send group in sequence (seperate connections) sends multiple requests one after the other in new connection
-                    each one
-Burpsuite reapter - send group in parallel (single packet attack) sends multiple requests at the same time over one connection
-                    flooding the server 
+Burpsuite reapter - send group in sequence (single connection): sends multiple requests one after the other over one 
+                    connection
+Burpsuite reapter - send group in sequence (seperate connections) sends multiple requests one after the other in new 
+                    connection each one
+Burpsuite reapter - send group in parallel (single packet attack) sends multiple requests at the same time over one 
+                    connection flooding the server 
 Turbo intrder - burpsuite extention for sending large amounts of HTTP requerts with extreme speed 
 
   
