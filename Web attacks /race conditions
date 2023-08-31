@@ -1,0 +1,20 @@
+RACE CONDITIONS:
+there are multiple ways to implement race condition.
+In its core the vulnabiilty occur when website proccess requests in parallel without safeguerds.
+Lets take an instance of coupon use, the proccess when appllying a couon usually goes like that:
+   *submit coupon code > check if the coupon already been used? > if false then the code is applied and if true then not >
+    updates the database the the coupon as been used from false to true
+As we can see the code first being applied and only after is being updated, we do not sense it but there is a time in ml
+between the code apply to the database update and untill the database wont be updated we can send multiple times the coupons 
+requests and theu also be applied. 
+One way to do that is to send multiple requests in the same time the problem is we are not fast enough.
+
+In burpsuite we have few solutions for that:
+Burpsuite reapter - send group in sequence (single connection): sends multiple requests one after the other over one connection
+Burpsuite reapter - send group in sequence (seperate connections) sends multiple requests one after the other in new connection
+                    each one
+Burpsuite reapter - send group in parallel (single packet attack) sends multiple requests at the same time over one connection
+                    flooding the server 
+Turbo intrder - burpsuite extention for sending large amounts of HTTP requerts with extreme speed 
+
+  
