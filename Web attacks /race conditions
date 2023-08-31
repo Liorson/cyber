@@ -1,5 +1,5 @@
 RACE CONDITIONS:
-there are multiple ways to implement race condition.
+there are multiple ways to implement race condition. but this attack works on multi-step factors in ann app
 In its core the vulnabiilty occur when website proccess requests in parallel without safeguerds.
 Lets take an instance of coupon use, the proccess when appllying a couon usually goes like that:
    *submit coupon code > check if the coupon already been used? > if false then the code is applied and if true then not >
@@ -17,5 +17,38 @@ Burpsuite reapter - send group in sequence (seperate connections) sends multiple
 Burpsuite reapter - send group in parallel (single packet attack) sends multiple requests at the same time over one 
                     connection flooding the server 
 Turbo intrder - burpsuite extention for sending large amounts of HTTP requerts with extreme speed 
+
+The Methodology:
+Predict > Probe > prove
+
+Predict potential collisions:
+Since everything is multi-step ideally we'd test every combination of endpoints in the intire website but it's impractical. 
+Instead we need to predict where vulnerabilities are likely to occur.
+To start we will identify objects with security controls we would like to bypass, this will typically include users and
+sessions, business-specific concepts like orders.
+For each object, we then need to identivfy all the endpoints that either write to it, or read data from it. 
+*** A race condition vulnerabillty requires a "collision" - two concurrent operations on a shared resource. ***
+
+We can use three key questions to rule out endpoints that are unlikely to cause collisions:
+1)How is the state stored? data that's stored in a persistent server-side(backend) structure is ideal for exploitation.
+2)Are we editing or appending? opearation that edit existing data have bigger collision potential.
+3)Whats the opearation keyed on? most endpoints opeartes on a specific record using a "key"(ex,username), we need two 
+  operations that use the same key.
+
+Probe for clues:
+Now that we've selected some high-value endpoints, its time to probe for clues/hints that hidden sub-states exist.
+Our objective at this point is simply to evoke a clue. For this we will need to send large number of requests to
+maximize the chance of visible side-effects.
+
+*** NEXT, benchmarkis most important, benchmark how the endpoints behave under normal conditions by sending requests blend 
+with a few seconds between each request.
+
+Finally, use the single-packet attack to issue all the requests at once, thrugh turbo intruder or repeater using the 
+'Send group in parallel' option. 
+Analyze the results and look for clues in the form of any deviation ftom the benchmark behavior.
+
+Prove the concept:
+After we found a clue, the final step is to prove the concept and turn it into an attack.
+The exact steps will depend on the attack we are attempting, but there is a few general pointers that may be useful:
 
   
