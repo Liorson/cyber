@@ -50,5 +50,12 @@ Analyze the results and look for clues in the form of any deviation ftom the ben
 Prove the concept:
 After we found a clue, the final step is to prove the concept and turn it into an attack.
 The exact steps will depend on the attack we are attempting, but there is a few general pointers that may be useful:
+1)When we are sending a batch of requests, you may find that an early request triggerd the vullnabillty but later requests 
+  overwrite/invalidate it and the final statte is unexploitable, in this case eliminate all unnecessary requests, two should
+  be enough for most cases.
 
+2)Dropping to two requests will make the attack more timing-sesitive, so you may need to retry the attack multiple times
+  or automateit.
+
+3)Dont forget to escalate! the path to maximum impact isn't always obvious.  
   
